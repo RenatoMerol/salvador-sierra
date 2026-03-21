@@ -1,71 +1,608 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Salvador Sierra — Pintor y Artista Visual</title>
-    <meta name="description" content="Obra original de pintura, acrílico, aerosol y técnica mixta. Portafolio de Salvador Sierra, arquitecto y artista visual mexicano.">
-    <meta property="og:image" content="">
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Salvador Sierra — Pintor y Artista Visual</title>
+  <meta name="description" content="Obra original de Salvador Sierra López — arquitecto y artista visual mexicano. Pinturas, murales e intervenciones en acrílico, aerosol y técnica mixta.">
+  <meta property="og:title" content="Salvador Sierra — Artista Visual">
+  <meta property="og:description" content="Obra original en acrílico, aerosol y técnica mixta. México.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- Navegación -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">Salvador Sierra</div>
-            <ul class="nav-links">
-                <li><a href="#obras">Obras</a></li>
-                <li><a href="#sobre">Sobre mí</a></li>
-                <li><a href="#contacto">Contacto</a></li>
-                <li><a href="en/" class="lang-switch">EN</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <!-- Hero -->
-    <section class="hero">
-        <div class="container">
-            <h1>Salvador Sierra</h1>
-            <p class="tagline">Pintor • Artista Visual • Arquitecto</p>
-            <p class="subtitle">Obra original en acrílico, aerosol y técnica mixta</p>
-            <a href="#contacto" class="cta-button">Contactar</a>
-        </div>
-    </section>
+  <!-- ── NAV ── -->
+  <nav class="nav" id="nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-brand">Salvador Sierra</a>
+      <ul class="nav-links">
+        <li><a href="#obras"    data-i18n="nav.obras">Obras</a></li>
+        <li><a href="#sobre"    data-i18n="nav.sobre">Sobre mí</a></li>
+        <li><a href="#contacto" data-i18n="nav.contacto">Contacto</a></li>
+        <li>
+          <button class="theme-toggle" id="themeToggle" aria-label="Cambiar tema">
+            <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+        </li>
+        <li>
+          <button class="lang-toggle" id="langToggle" aria-label="Cambiar idioma">
+            <span class="lang-es">ES</span>
+            <span class="lang-sep">/</span>
+            <span class="lang-en">EN</span>
+          </button>
+        </li>
+      </ul>
+      <button class="nav-hamburger" id="hamburger" aria-label="Menú">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
 
-    <!-- Obras destacadas -->
-    <section id="obras" class="obras-destacadas">
-        <div class="container">
-            <h2>Obras Destacadas</h2>
-            <div class="galeria-grid">
-                <!-- Las obras se cargarán aquí -->
-            </div>
-        </div>
-    </section>
+  <!-- ── MOBILE MENU ── -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#obras"    data-i18n="nav.obras">Obras</a></li>
+      <li><a href="#sobre"    data-i18n="nav.sobre">Sobre mí</a></li>
+      <li><a href="#contacto" data-i18n="nav.contacto">Contacto</a></li>
+    </ul>
+    <button class="lang-toggle mobile-lang" id="langToggleMobile">
+      <span class="lang-es">ES</span>
+      <span class="lang-sep">/</span>
+      <span class="lang-en">EN</span>
+    </button>
+  </div>
 
-    <!-- Sobre mí -->
-    <section id="sobre" class="sobre">
-        <div class="container">
-            <h2>Sobre mí</h2>
-            <p>Contenido de biografía aquí.</p>
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-gradient-line"></div>
+    <div class="hero-inner">
+      <div class="hero-text">
+        <p class="hero-eyebrow" data-i18n="hero.eyebrow">Arquitecto · Artista Visual · México</p>
+        <h1 class="hero-name">Salvador<br>Sierra</h1>
+        <p class="hero-tagline">
+          SE VENDE ARTE
+          <span class="en">art 4 sale</span>
+        </p>
+        <p class="hero-desc" data-i18n="hero.desc">Obra original en acrílico, aerosol y técnica mixta.</p>
+        <div class="hero-ctas">
+          <a href="#obras"    class="btn btn-primary" data-i18n="hero.cta1">Ver obras</a>
+          <a href="#contacto" class="btn btn-outline"  data-i18n="hero.cta2">Contactar</a>
         </div>
-    </section>
-
-    <!-- Contacto -->
-    <section id="contacto" class="contacto">
-        <div class="container">
-            <h2>Contacto</h2>
-            <p>Correo: sierralopez721@gmail.com</p>
-            <p>Instagram: @sal_sierra</p>
+      </div>
+      <div class="hero-image">
+        <div class="hero-image-inner">
+          <img src="images/salvador-sierra-mural-amazon-cedis-tepotzotlan.webp" alt="Mural Amazon CEDIS — Salvador Sierra López" loading="eager">
         </div>
-    </section>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 Salvador Sierra. Todos los derechos reservados.</p>
+  <!-- ── GALERÍA ── -->
+  <section class="gallery-section" id="obras">
+    <div class="gallery-header reveal">
+      <h2 data-i18n="gallery.title">Obras</h2>
+      <div class="gallery-filters" role="group" aria-label="Filtrar obras">
+        <button class="filter-btn active" data-filter="all"             data-i18n="filter.all">Todo</button>
+        <button class="filter-btn"        data-filter="pinturas"        data-i18n="filter.pinturas">Pinturas</button>
+        <button class="filter-btn"        data-filter="murales"         data-i18n="filter.murales">Murales</button>
+        <button class="filter-btn"        data-filter="colaboraciones"  data-i18n="filter.colab">Colaboraciones</button>
+        <button class="filter-btn"        data-filter="intervenciones"  data-i18n="filter.interv">Intervenciones</button>
+      </div>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid">
+
+      <!-- PINTURAS -->
+      <article class="obra-card reveal" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-mascaras-iugh-50x40.webp" alt="Máscaras — IUGH, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Máscaras — IUGH</div>
+            <div class="obra-meta">Acrílico · 50 × 40 cm · 2026</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
         </div>
-    </footer>
+      </article>
 
-    <script src="js/main.js"></script>
+      <article class="obra-card reveal reveal-delay-1" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-mascaras-chill-50x40.webp" alt="Máscaras — CHILL, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Máscaras — CHILL</div>
+            <div class="obra-meta">Acrílico · 50 × 40 cm · 2026</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-2" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-mascaras-cara-02-50x40.webp" alt="Máscaras #3, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Máscaras #3</div>
+            <div class="obra-meta">Acrílico · 50 × 40 cm · 2026</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
+        </div>
+      </article>
+
+      <article class="obra-card reveal" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-mascaras-health-70x50.webp" alt="Máscaras — HEALTH, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Máscaras — HEALTH</div>
+            <div class="obra-meta">Acrílico · 70 × 50 cm · 2026</div>
+          </div>
+          <span class="badge badge-feat" data-i18n="badge.feat">Destacada</span>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-1" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-pintura-fluida-rojo-fuego.webp" alt="Flujo Rojo, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Flujo Rojo</div>
+            <div class="obra-meta">Acrílico · 2024</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-2" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-pintura-fluida-retrato-calido.webp" alt="Retrato Cálido, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Retrato Cálido</div>
+            <div class="obra-meta">Acrílico · 2023</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
+        </div>
+      </article>
+
+      <article class="obra-card reveal" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-pintura-fluida-rojo-morado.webp" alt="Rojo-Morado, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Rojo-Morado</div>
+            <div class="obra-meta">Acrílico · 2023</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-1" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-pintura-fluida-naranja-neon.webp" alt="Naranja Neón, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Naranja Neón</div>
+            <div class="obra-meta">Acrílico · 2024</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-2" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-pintura-papaya-tropical.webp" alt="Papaya, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Papaya</div>
+            <div class="obra-meta">Acrílico · 2024</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
+        </div>
+      </article>
+
+      <article class="obra-card reveal" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-pintura-hojas-tropicales.webp" alt="Hojas Tropicales, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Hojas Tropicales</div>
+            <div class="obra-meta">Acrílico · 2024</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-1" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-pop-art-pantera-negra.webp" alt="La Pantera, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">La Pantera</div>
+            <div class="obra-meta">Acrílico · 2023</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-2" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-op-art-geometrico-source.webp" alt="Source, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Source</div>
+            <div class="obra-meta">Acrílico · Op Art · 2022</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
+        </div>
+      </article>
+
+      <article class="obra-card reveal" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-retrato-expresionista-cara-turquesa.webp" alt="Máscara Turquesa, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Máscara Turquesa</div>
+            <div class="obra-meta">Acrílico · 2022</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-1" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-dibujo-rostro-linea-roja.webp" alt="Rostro Rojo, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Rostro Rojo</div>
+            <div class="obra-meta">Técnica mixta · 2024</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-2" data-category="pinturas">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-aerosol-degradado-arcoiris.webp" alt="Degradado, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Degradado</div>
+            <div class="obra-meta">Aerosol · 2023</div>
+          </div>
+          <span class="badge badge-avail" data-i18n="badge.avail">Disponible</span>
+        </div>
+      </article>
+
+      <!-- MURALES -->
+      <article class="obra-card reveal" data-category="murales">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-mural-amazon-cedis-tepotzotlan.webp" alt="Mural Amazon CEDIS Tepotzotlán, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Amazon México — CEDIS Tepotzotlán</div>
+            <div class="obra-meta">Aerosol y acrílico · Col. con Christopher Aguilar · Tepotzotlán, Edomex · 2021</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-1" data-category="murales">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-mural-abecedario-graffiti-01.webp" alt="Mural Amazon CEDIS detalle, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Amazon CEDIS — Detalle</div>
+            <div class="obra-meta">Aerosol y acrílico · Tepotzotlán, Edomex · 2021</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-2" data-category="murales">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-intervencion-ventanas-arquitectura.webp" alt="Street Fit, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Street Fit</div>
+            <div class="obra-meta">Aerosol · Playa del Carmen · 2022</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal" data-category="murales">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-mural-personajes-coronas.webp" alt="Personajes y Coronas, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Personajes y Coronas</div>
+            <div class="obra-meta">Aerosol y acrílico · CDMX · 2022</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-1" data-category="murales">
+        <div class="obra-img"><div class="obra-img-inner"></div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Babel Tulum</div>
+            <div class="obra-meta">Aerosol y acrílico · Tulum · 2022</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-2" data-category="murales">
+        <div class="obra-img"><div class="obra-img-inner"></div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Playa Vice Lifestyle</div>
+            <div class="obra-meta">Aerosol · Playa del Carmen · 2023</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- COLABORACIONES -->
+      <article class="obra-card reveal" data-category="colaboraciones">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-pop-art-tio-rico.webp" alt="Tío Rico, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Tío Rico</div>
+            <div class="obra-meta">Técnica mixta · 2022</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-1" data-category="colaboraciones">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-mural-amazon-cedis-tepotzotlan.webp" alt="Amazon México colaboración, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Amazon México</div>
+            <div class="obra-meta">Col. con Christopher Aguilar · Aerosol y acrílico · 2021</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-2" data-category="colaboraciones">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-pop-art-richie-rich-02.webp" alt="Rich #2, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Rich #2</div>
+            <div class="obra-meta">Técnica mixta · 2023</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal" data-category="colaboraciones">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-pop-art-diablo-rojo.webp" alt="Diablo, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Diablo</div>
+            <div class="obra-meta">Técnica mixta · 2023</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-1" data-category="colaboraciones">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-pop-art-mario-bros.webp" alt="Mario Bros, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Mario Bros</div>
+            <div class="obra-meta">Técnica mixta · 2022</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-2" data-category="colaboraciones">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-pop-art-alice-wonderland.webp" alt="Alice in Wonderland, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Alice in Wonderland</div>
+            <div class="obra-meta">Técnica mixta · 2022</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal" data-category="colaboraciones">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-pop-art-caras-invertidas.webp" alt="Caras Invertidas, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Caras Invertidas</div>
+            <div class="obra-meta">Técnica mixta · 2022</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-1" data-category="colaboraciones">
+        <div class="obra-img"><div class="obra-img-inner"></div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Tulum Board</div>
+            <div class="obra-meta">COMBI TULUM · Aerosol · Tulum · 2021</div>
+          </div>
+        </div>
+      </article>
+
+      <!-- INTERVENCIONES -->
+      <article class="obra-card reveal" data-category="intervenciones">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-tecnica-mixta-cosmos-urbano.webp" alt="Cosmos Urbano, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Cosmos Urbano</div>
+            <div class="obra-meta">Técnica mixta · CDMX · 2023</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-1" data-category="intervenciones">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-tecnica-mixta-ventana-espiral-rojo.webp" alt="Ventana Espiral, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Ventana Espiral</div>
+            <div class="obra-meta">Técnica mixta · 2023</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-2" data-category="intervenciones">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-tecnica-mixta-error-digital.webp" alt="Error Digital, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Error Digital</div>
+            <div class="obra-meta">Técnica mixta · 2024</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal" data-category="intervenciones">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-tecnica-mixta-vacio-arquitectonico.webp" alt="Vacío Arquitectónico, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Vacío Arquitectónico</div>
+            <div class="obra-meta">Técnica mixta · 2023</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-1" data-category="intervenciones">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-tecnica-mixta-abstracta-vertical-naranja.webp" alt="Vertical Naranja, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Vertical Naranja</div>
+            <div class="obra-meta">Técnica mixta · 2023</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="obra-card reveal reveal-delay-2" data-category="intervenciones">
+        <div class="obra-img"><div class="obra-img-inner">
+          <img src="images/salvador-sierra-tecnica-mixta-big-bang-01.webp" alt="Big Bang, Salvador Sierra" loading="lazy">
+        </div></div>
+        <div class="obra-info">
+          <div>
+            <div class="obra-title">Big Bang</div>
+            <div class="obra-meta">Técnica mixta · 2024</div>
+          </div>
+        </div>
+      </article>
+
+    </div><!-- /gallery-grid -->
+  </section>
+
+  <!-- ── SOBRE MÍ ── -->
+  <section class="about-section" id="sobre">
+    <div class="about-inner">
+      <div class="about-photo-wrap reveal">
+        <div class="about-photo-inner">
+          <img src="images/salvador-sierra-artista-foto.webp" alt="Salvador Sierra López — Arquitecto y Artista Visual" loading="lazy">
+        </div>
+      </div>
+      <div class="about-content">
+        <p class="about-eyebrow reveal" data-i18n="about.eyebrow">Sobre el artista</p>
+        <h2 class="about-name reveal">Salvador<br>Sierra<br>López</h2>
+        <div class="about-bio">
+          <p class="reveal" data-i18n="about.p1">Arquitecto y artista visual mexicano con base en Ciudad de México. Su obra integra el rigor del diseño espacial con la expresión pictórica libre, influenciada por el Pop Art, el Impresionismo y el Op Art.</p>
+          <p class="reveal reveal-delay-1" data-i18n="about.p2">Trabaja en acrílico, aerosol y técnica mixta. Ha realizado murales e intervenciones en desarrollos en Playa del Carmen, Tulum, Puerto Morelos y Ciudad de México.</p>
+          <p class="reveal reveal-delay-2" data-i18n="about.p3">Como arquitecto, reconoce cómo el arte transforma el valor y la narrativa de los espacios. Cada pieza crea una identidad que trasciende la decoración.</p>
+        </div>
+        <a href="#contacto" class="btn btn-primary reveal" data-i18n="about.cta">Contactar</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CONTACTO ── -->
+  <section class="contact-section" id="contacto">
+    <div class="contact-inner">
+      <h2 class="reveal" data-i18n="contact.title">Contacto</h2>
+      <p class="contact-sub reveal" data-i18n="contact.sub">Para obra original, murales, commissions y proyectos.</p>
+      <div class="contact-links">
+        <a href="mailto:sierralopez721@gmail.com" class="contact-link reveal">
+          <span class="contact-link-label" data-i18n="contact.email">Email</span>
+          <span class="contact-link-value">sierralopez721@gmail.com</span>
+        </a>
+        <a href="https://instagram.com/sal_sierra" target="_blank" rel="noopener noreferrer" class="contact-link reveal reveal-delay-1">
+          <span class="contact-link-label">Instagram</span>
+          <span class="contact-link-value">@sal_sierra</span>
+        </a>
+        <a href="https://wa.me/5255318738​25" target="_blank" rel="noopener noreferrer" class="contact-link reveal reveal-delay-2">
+          <span class="contact-link-label">WhatsApp</span>
+          <span class="contact-link-value">+52 55 3187 3825</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── INSTAGRAM ── -->
+  <section class="instagram-section">
+    <div class="instagram-inner">
+      <p class="instagram-eyebrow">@sal_sierra</p>
+      <h2 class="instagram-title">Sígueme en Instagram</h2>
+      <!-- BEHOLD WIDGET — conectar en behold.so con cuenta @sal_sierra -->
+      <!-- <div id="behold-widget-XXXXXXXX"></div>
+      <script src="https://w.behold.so/widget.js" type="module"></script> -->
+      <a href="https://instagram.com/sal_sierra" target="_blank" rel="noopener noreferrer" class="btn btn-outline instagram-cta">
+        Ver feed completo
+      </a>
+    </div>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="footer-brand">Salvador Sierra López</span>
+      <span class="footer-copy" data-i18n="footer.copy">© 2026. Todos los derechos reservados.</span>
+      <a href="https://www.merolmedia.com" target="_blank" rel="noopener noreferrer" class="footer-powered">Powered by Merol Media</a>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
 </body>
 </html>

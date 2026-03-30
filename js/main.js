@@ -128,6 +128,12 @@ document.addEventListener('DOMContentLoaded', function () {
       'contact.sub':   'Para obra original, murales, commissions y proyectos.',
       'contact.email': 'Email',
       'footer.copy':   '© 2026. Todos los derechos reservados.',
+      'lightbox.technique':  'Técnica',
+      'lightbox.dimensions': 'Dimensiones',
+      'lightbox.year':       'Año',
+      'lightbox.series':     'Serie',
+      'lightbox.location':   'Ubicación',
+      'lightbox.cta':        'Pedir informes',
     },
     en: {
       'nav.obras':     'Works',
@@ -157,6 +163,12 @@ document.addEventListener('DOMContentLoaded', function () {
       'contact.sub':   'For original artwork, murals, commissions and projects.',
       'contact.email': 'Email',
       'footer.copy':   '© 2026. All rights reserved.',
+      'lightbox.technique':  'Technique',
+      'lightbox.dimensions': 'Dimensions',
+      'lightbox.year':       'Year',
+      'lightbox.series':     'Series',
+      'lightbox.location':   'Location',
+      'lightbox.cta':        'Inquire',
     }
   };
 
@@ -208,6 +220,121 @@ document.addEventListener('DOMContentLoaded', function () {
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
+  });
+
+
+  // ── 7. LIGHTBOX ──────────────────────────────────────────────────
+
+  const gridEl   = document.getElementById('galleryGrid');
+  const lightbox = document.getElementById('lightbox');
+  let currentCardIndex = 0;
+  let visibleCards = [];
+
+  function getVisibleCards() {
+    return [...document.querySelectorAll('#galleryGrid .obra-card')].filter(
+      c => !c.classList.contains('hiding') && c.style.display !== 'none'
+    );
+  }
+
+  function populateLightbox(card) {
+    const img = card.querySelector('img');
+    const lbImg = document.getElementById('lightboxImg');
+    lbImg.src = img ? img.src : '';
+    lbImg.alt = img ? img.alt : '';
+
+    document.getElementById('lightboxTitle').textContent = card.dataset.title || '';
+    document.getElementById('lightboxTechnique').textContent = card.dataset.technique || '';
+
+    const dims = card.dataset.dimensions;
+    const dimsDt = document.getElementById('lightboxDimensions').previousElementSibling;
+    const dimsDd = document.getElementById('lightboxDimensions');
+    if (dims) {
+      dimsDt.classList.remove('hidden'); dimsDd.classList.remove('hidden');
+      dimsDd.textContent = dims;
+    } else {
+      dimsDt.classList.add('hidden'); dimsDd.classList.add('hidden');
+    }
+
+    document.getElementById('lightboxYear').textContent = card.dataset.year || '';
+
+    const series = card.dataset.series;
+    const seriesDt = document.getElementById('lightboxSeries').previousElementSibling;
+    const seriesDd = document.getElementById('lightboxSeries');
+    if (series) {
+      seriesDt.classList.remove('hidden'); seriesDd.classList.remove('hidden');
+      seriesDd.textContent = series;
+    } else {
+      seriesDt.classList.add('hidden'); seriesDd.classList.add('hidden');
+    }
+
+    const location = card.dataset.location;
+    const locDt = document.getElementById('lightboxLocation').previousElementSibling;
+    const locDd = document.getElementById('lightboxLocation');
+    if (location) {
+      locDt.classList.remove('hidden'); locDd.classList.remove('hidden');
+      locDd.textContent = location;
+    } else {
+      locDt.classList.add('hidden'); locDd.classList.add('hidden');
+    }
+
+    // WhatsApp CTA
+    const title = card.dataset.title || '';
+    const tech  = card.dataset.technique || '';
+    const dimStr = card.dataset.dimensions || '';
+    const msgText = currentLang === 'en'
+      ? `Hi, I'm interested in the artwork "${title}" (${tech}${dimStr ? ', ' + dimStr : ''})`
+      : `Hola, me interesa la obra "${title}" (${tech}${dimStr ? ', ' + dimStr : ''})`;
+    document.getElementById('lightboxCta').href =
+      'https://wa.me/525531873825?text=' + encodeURIComponent(msgText);
+
+    // Update prev/next visibility
+    document.getElementById('lightboxPrev').style.visibility = currentCardIndex > 0 ? '' : 'hidden';
+    document.getElementById('lightboxNext').style.visibility = currentCardIndex < visibleCards.length - 1 ? '' : 'hidden';
+  }
+
+  function openLightbox(card) {
+    visibleCards = getVisibleCards();
+    const title = card.dataset.title;
+    currentCardIndex = visibleCards.findIndex(c => c.dataset.title === title);
+    if (currentCardIndex === -1) currentCardIndex = 0;
+
+    populateLightbox(visibleCards[currentCardIndex]);
+    lightbox.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lightbox.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  gridEl.addEventListener('click', e => {
+    const card = e.target.closest('.obra-card');
+    if (card) openLightbox(card);
+  });
+
+  document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+  document.getElementById('lightboxPrev').addEventListener('click', () => {
+    if (currentCardIndex > 0) {
+      currentCardIndex--;
+      populateLightbox(visibleCards[currentCardIndex]);
+    }
+  });
+
+  document.getElementById('lightboxNext').addEventListener('click', () => {
+    if (currentCardIndex < visibleCards.length - 1) {
+      currentCardIndex++;
+      populateLightbox(visibleCards[currentCardIndex]);
+    }
+  });
+
+  document.addEventListener('keydown', e => {
+    if (!lightbox.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft')  document.getElementById('lightboxPrev').click();
+    if (e.key === 'ArrowRight') document.getElementById('lightboxNext').click();
   });
 
 });

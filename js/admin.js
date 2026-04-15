@@ -177,6 +177,7 @@
     refs.internalNoteInput = document.getElementById('internalNoteInput');
     refs.deleteArtworkBtn = document.getElementById('deleteArtworkBtn');
     refs.saveDraftBtn = document.getElementById('saveDraftBtn');
+    refs.publishBtn = document.getElementById('publishBtn');
     refs.saveFeedback = document.getElementById('saveFeedback');
     refs.previewVisibility = document.getElementById('previewVisibility');
     refs.previewCardImage = document.getElementById('previewCardImage');
@@ -479,6 +480,7 @@
   async function handleUploadedFile(file) {
     try {
       if (refs.uploadDropzone) refs.uploadDropzone.classList.add('is-loading');
+      if (refs.publishBtn) refs.publishBtn.disabled = true;
       setFeedback('Optimizando imagen localmente para simular el flujo final...', '');
       const optimized = await optimizeImage(file);
 
@@ -492,10 +494,12 @@
       updateUploadPresentation();
       updatePreviewFromForm();
       if (refs.uploadDropzone) refs.uploadDropzone.classList.remove('is-loading');
+      if (refs.publishBtn) refs.publishBtn.disabled = false;
       setFeedback('Imagen lista. El preview ahora usa la version optimizada en este navegador.', 'success');
     } catch (error) {
       console.error(error);
       if (refs.uploadDropzone) refs.uploadDropzone.classList.remove('is-loading');
+      if (refs.publishBtn) refs.publishBtn.disabled = false;
       setFeedback('No pude procesar esa imagen. Intenta con otro archivo o usa una imagen de muestra.', 'error');
     }
   }
@@ -542,7 +546,7 @@
     refs.previewDimensions.textContent = artwork.dimensions || 'Pendiente';
     refs.previewYear.textContent = artwork.year || 'Pendiente';
     refs.previewVisibility.textContent = visibility.label;
-    refs.previewVisibility.className = 'admin-status-pill' + (artwork.visibility === 'draft' || artwork.visibility === 'hidden' ? ' admin-status-pill-neutral' : '');
+    refs.previewVisibility.className = 'panel-status-chip' + (artwork.visibility === 'published' ? ' is-published' : '');
 
     toggleOptionalPreview(refs.previewSeriesLabel, refs.previewSeries, artwork.series);
     toggleOptionalPreview(refs.previewLocationLabel, refs.previewLocation, artwork.location);
@@ -782,7 +786,7 @@
 
   function setFeedback(message, tone) {
     refs.saveFeedback.textContent = message;
-    refs.saveFeedback.className = 'editor-status';
+    refs.saveFeedback.className = 'form-feedback';
 
     if (tone === 'success') refs.saveFeedback.classList.add('is-success');
     if (tone === 'error') refs.saveFeedback.classList.add('is-error');

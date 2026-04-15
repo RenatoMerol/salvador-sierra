@@ -547,6 +547,7 @@
     refs.previewYear.textContent = artwork.year || 'Pendiente';
     refs.previewVisibility.textContent = visibility.label;
     refs.previewVisibility.className = 'panel-status-chip' + (artwork.visibility === 'published' ? ' is-published' : '');
+    refs.formHeading.textContent = artwork.title || (selectedArtworkId ? 'Editar obra' : 'Nueva obra');
 
     toggleOptionalPreview(refs.previewSeriesLabel, refs.previewSeries, artwork.series);
     toggleOptionalPreview(refs.previewLocationLabel, refs.previewLocation, artwork.location);

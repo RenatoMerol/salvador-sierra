@@ -126,10 +126,16 @@
                   <span>Año *</span>
                   <input type="number" id="yearInput" min="1900" max="2100" placeholder="2026" required>
                 </label>
-                <label class="field">
+                <div class="field">
                   <span>Medidas *</span>
-                  <input type="text" id="dimensionsInput" placeholder="50 × 40 cm" required autocomplete="off">
-                </label>
+                  <div class="dims-row">
+                    <input type="number" id="heightInput" min="1" step="1" placeholder="Alto" aria-label="Alto en centímetros" inputmode="numeric" required>
+                    <span class="dims-sep" aria-hidden="true">×</span>
+                    <input type="number" id="widthInput" min="1" step="1" placeholder="Ancho" aria-label="Ancho en centímetros" inputmode="numeric" required>
+                    <span class="dims-unit" aria-hidden="true">cm</span>
+                  </div>
+                  <input type="hidden" id="dimensionsInput">
+                </div>
               </div>
 
               <div class="field-row-2">

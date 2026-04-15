@@ -170,6 +170,8 @@
     refs.techniqueInput = document.getElementById('techniqueInput');
     refs.yearInput = document.getElementById('yearInput');
     refs.dimensionsInput = document.getElementById('dimensionsInput');
+    refs.heightInput = document.getElementById('heightInput');
+    refs.widthInput = document.getElementById('widthInput');
     refs.seriesInput = document.getElementById('seriesInput');
     refs.locationInput = document.getElementById('locationInput');
     refs.statusInput = document.getElementById('statusInput');
@@ -209,6 +211,8 @@
     refs.imageInput.addEventListener('change', handleImageInputChange);
     refs.seedImageSelect.addEventListener('change', handleSeedImageChange);
     refs.titleInput.addEventListener('input', handleTitleChange);
+    refs.heightInput.addEventListener('input', syncDimensions);
+    refs.widthInput.addEventListener('input', syncDimensions);
     refs.saveDraftBtn.addEventListener('click', function () { saveArtwork('draft'); });
     refs.deleteArtworkBtn.addEventListener('click', deleteArtwork);
     refs.artworkForm.addEventListener('submit', function (event) {
@@ -411,6 +415,9 @@
     refs.techniqueInput.value = artwork.technique;
     refs.yearInput.value = artwork.year;
     refs.dimensionsInput.value = artwork.dimensions;
+    const dimsMatch = (artwork.dimensions || '').match(/(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)/i);
+    refs.heightInput.value = dimsMatch ? dimsMatch[1] : '';
+    refs.widthInput.value = dimsMatch ? dimsMatch[2] : '';
     refs.seriesInput.value = artwork.series;
     refs.locationInput.value = artwork.location;
     refs.statusInput.value = artwork.status;
@@ -435,6 +442,13 @@
     } : null;
 
     updateUploadPresentation();
+    updatePreviewFromForm();
+  }
+
+  function syncDimensions() {
+    const h = refs.heightInput.value.trim();
+    const w = refs.widthInput.value.trim();
+    refs.dimensionsInput.value = h && w ? h + ' × ' + w + ' cm' : '';
     updatePreviewFromForm();
   }
 

@@ -311,6 +311,15 @@
 .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.6rem; }
 .field-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; }
 
+/* ── Medidas (alto × ancho cm) ── */
+.dims-row { display: flex; align-items: center; gap: 0.4rem; }
+.dims-row input { flex: 1 1 0; min-width: 0; text-align: center; padding-left: 0.35rem; padding-right: 0.35rem; }
+.dims-sep { font-size: 0.95rem; color: var(--text-low); flex-shrink: 0; line-height: 1; }
+.dims-unit { font-size: 0.55rem; letter-spacing: 2px; text-transform: uppercase; color: var(--text-low); flex-shrink: 0; }
+.dims-row input::-webkit-outer-spin-button,
+.dims-row input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.dims-row input[type=number] { -moz-appearance: textfield; }
+
 /* ── Status toggle ── */
 .status-group { display: flex; flex-shrink: 0; }
 .status-opt { flex: 1; cursor: pointer; }

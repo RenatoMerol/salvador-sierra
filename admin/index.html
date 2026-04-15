@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel · Salvador Sierra</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/styles.css">
+  <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- HEADER -->
+  <header class="admin-header">
+    <div class="admin-header-inner">
+      <div class="admin-brand">
+        <span class="admin-brand-kicker">Panel de obras</span>
+        <span class="admin-brand-name">Salvador Sierra</span>
+      </div>
+      <div class="admin-header-end">
+        <button type="button" id="resetPrototypeBtn" class="btn-ghost-sm">Restaurar demo</button>
+        <a href="../" class="btn-ghost-sm">Ver sitio →</a>
+        <button type="button" id="newArtworkBtn" class="btn-new-sm">+ Nueva obra</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- PANTALLA DE ÉXITO (oculta por defecto) -->
+  <div class="success-screen" id="successScreen" aria-live="polite">
+    <div class="success-inner">
+      <div class="success-check" aria-hidden="true">
+        <svg viewBox="0 0 52 52" fill="none">
+          <circle class="success-circle" cx="26" cy="26" r="24" stroke="currentColor" stroke-width="2"/>
+          <path class="success-checkmark" d="M14 26l8 8 16-16" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <p class="success-title">¡Publicada!</p>
+      <p class="success-subtitle" id="successSubtitle">La obra ya está visible en tu sitio.</p>
+      <div class="success-btns">
+        <button type="button" id="successNewBtn" class="btn-success-new">+ Subir otra obra</button>
+        <a href="../" class="btn-success-view">Ver sitio →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="admin-main" id="adminMain">
+    <div class="admin-inner">
+
+      <!-- PANEL FORMULARIO -->
+      <section class="admin-panel">
+
+        <div class="panel-head">
+          <div class="panel-head-left">
+            <h1 class="panel-title" id="formHeading">Nueva obra</h1>
+            <span class="panel-status-chip" id="previewVisibility">Borrador</span>
+          </div>
+          <button type="button" id="deleteArtworkBtn" class="btn-delete" disabled>Eliminar</button>
+        </div>
+
+        <form id="artworkForm" novalidate>
+          <input type="hidden" id="artworkId">
+
+          <div class="form-two-col">
+
+            <!-- Columna izquierda: upload -->
+            <div class="col-upload">
+              <p class="block-label"><span class="block-num">1</span>Foto de la obra</p>
+
+              <label class="upload-zone" id="uploadDropzone">
+                <input type="file" id="imageInput" accept="image/*" class="upload-input">
+                <div class="upload-placeholder">
+                  <svg class="upload-icon" viewBox="0 0 44 44" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="3" y="8" width="38" height="28" rx="2.5"/>
+                    <circle cx="16" cy="20" r="4"/>
+                    <path d="M3 28 l10-9 8 7 6-5 14 13"/>
+                    <path d="M30 8V3M30 3l-3.5 3.5M30 3l3.5 3.5"/>
+                  </svg>
+                  <strong class="upload-cta" id="uploadFilename">Toca aquí para subir la foto</strong>
+                  <span class="upload-sub">JPG, PNG o WebP · máx 20 MB</span>
+                  <span class="upload-hint" id="uploadMeta">o toma la foto desde tu iPhone directamente</span>
+                </div>
+                <div class="upload-loading">
+                  <div class="upload-spinner" aria-hidden="true"></div>
+                  <span>Optimizando imagen…</span>
+                </div>
+                <img id="uploadPreviewImage" class="upload-preview" src="" alt="">
+                <div class="upload-overlay"><span>Toca para cambiar</span></div>
+              </label>
+
+              <details class="inner-accordion">
+                <summary>Usar imagen de muestra del catálogo</summary>
+                <div class="inner-accordion-body">
+                  <label class="field">
+                    <span>Imagen de muestra</span>
+                    <select id="seedImageSelect">
+                      <option value="">Ninguna</option>
+                      <option value="../images/salvador-sierra-mascaras-health-70x50.webp">Máscaras · HEALTH</option>
+                      <option value="../images/salvador-sierra-el-rostro-de-ulises.webp">El Rostro de Ulises</option>
+                      <option value="../images/salvador-sierra-mural-amazon-cedis-tepotzotlan.webp">Amazon CEDIS</option>
+                      <option value="../images/salvador-sierra-tecnica-mixta-error-digital.webp">Error Digital</option>
+                    </select>
+                  </label>
+                </div>
+              </details>
+            </div>
+
+            <!-- Columna derecha: datos, estado, acciones -->
+            <div class="col-fields">
+              <p class="block-label"><span class="block-num">2</span>Datos de la obra</p>
+
+              <label class="field field--big">
+                <span>Título *</span>
+                <input type="text" id="titleInput" placeholder="Ej. Máscaras · Luz" required autocomplete="off">
+              </label>
+
+              <div class="field-row-3">
+                <label class="field">
+                  <span>Técnica *</span>
+                  <input type="text" id="techniqueInput" placeholder="Acrílico" required autocomplete="off">
+                </label>
+                <label class="field">
+                  <span>Año *</span>
+                  <input type="number" id="yearInput" min="1900" max="2100" placeholder="2026" required>
+                </label>
+                <label class="field">
+                  <span>Medidas *</span>
+                  <input type="text" id="dimensionsInput" placeholder="50 × 40 cm" required autocomplete="off">
+                </label>
+              </div>
+
+              <div class="field-row-2">
+                <label class="field">
+                  <span>Colección o serie</span>
+                  <input type="text" id="seriesInput" placeholder="Ej. Máscaras, Pop Art…" autocomplete="off">
+                </label>
+                <label class="field">
+                  <span>Categoría</span>
+                  <select id="categoryInput">
+                    <option value="pinturas">Pintura</option>
+                    <option value="murales">Mural</option>
+                    <option value="colaboraciones">Colaboración</option>
+                    <option value="intervenciones">Intervención</option>
+                  </select>
+                </label>
+              </div>
+
+              <div class="block-sep"></div>
+              <p class="block-label"><span class="block-num">3</span>Estado y publicación</p>
+
+              <p class="field-sublabel">¿La pieza está disponible para venta?</p>
+              <div class="status-group">
+                <label class="status-opt">
+                  <input type="radio" name="status_ui" value="available" id="statusAvailable">
+                  <span class="status-opt__label status-opt__label--avail">Disponible</span>
+                </label>
+                <label class="status-opt status-opt--feat">
+                  <input type="radio" name="status_ui" value="featured" id="statusFeatured">
+                  <span class="status-opt__label status-opt__label--feat">Destacada</span>
+                </label>
+                <label class="status-opt status-opt--sold">
+                  <input type="radio" name="status_ui" value="sold" id="statusSold">
+                  <span class="status-opt__label status-opt__label--sold">Vendida</span>
+                </label>
+              </div>
+              <!-- select oculto para compatibilidad con JS existente -->
+              <select id="statusInput" class="visually-hidden" tabindex="-1" aria-hidden="true">
+                <option value="available">Disponible</option>
+                <option value="featured">Destacada</option>
+                <option value="sold">Vendida</option>
+              </select>
+
+              <label class="field">
+                <span>¿Publicar en el sitio?</span>
+                <select id="visibilityInput">
+                  <option value="draft">No todavía — guardar como borrador</option>
+                  <option value="published">Sí — publicar ahora en el sitio</option>
+                  <option value="hidden">Ocultar temporalmente</option>
+                </select>
+              </label>
+
+              <details class="extra-accordion">
+                <summary>Opciones adicionales (ubicación, nota, SEO)</summary>
+                <div class="extra-accordion-body">
+                  <label class="field">
+                    <span>Texto alt (para Google)</span>
+                    <input type="text" id="altInput" placeholder="Ej. Máscaras HEALTH, acrílico, Salvador Sierra">
+                  </label>
+                  <label class="field">
+                    <span>Ubicación de la obra</span>
+                    <input type="text" id="locationInput" placeholder="Ej. Tepotzotlán, Edomex">
+                  </label>
+                  <label class="field">
+                    <span>Nota interna (solo tú la ves)</span>
+                    <textarea id="internalNoteInput" rows="3" placeholder="Ej. Falta confirmar medidas."></textarea>
+                  </label>
+                </div>
+              </details>
+
+              <div class="form-actions">
+                <p class="form-feedback" id="saveFeedback"></p>
+                <div class="form-btns">
+                  <button type="button" id="saveDraftBtn" class="btn-draft">Guardar borrador</button>
+                  <button type="submit" id="publishBtn" class="btn-publish">Publicar →</button>
+                </div>
+              </div>
+
+            </div><!-- /col-fields -->
+          </div><!-- /form-two-col -->
+        </form>
+
+        <!-- PREVIEW (colapsado por defecto) -->
+        <details class="preview-accordion">
+          <summary>Ver cómo quedará en el sitio</summary>
+          <div class="preview-accordion-body">
+            <div class="preview-grid">
+              <div>
+                <p class="preview-col-label">Tarjeta de galería</p>
+                <article class="obra-card admin-public-card">
+                  <div class="obra-img">
+                    <div class="obra-img-inner">
+                      <img id="previewCardImage" src="../images/salvador-sierra-mascaras-health-70x50.webp" alt="">
+                    </div>
+                  </div>
+                  <div class="obra-info">
+                    <div>
+                      <div class="obra-title" id="previewCardTitle">Mascaras - HEALTH</div>
+                      <div class="obra-meta" id="previewCardMeta">Acrílico - 70 × 50 cm - 2026</div>
+                    </div>
+                    <span class="badge badge-feat" id="previewBadge">Destacada</span>
+                  </div>
+                </article>
+              </div>
+              <div>
+                <p class="preview-col-label">Detalle al hacer clic</p>
+                <div class="preview-lightbox-shell">
+                  <div class="preview-lightbox-image">
+                    <img id="previewLightboxImage" src="../images/salvador-sierra-mascaras-health-70x50.webp" alt="">
+                  </div>
+                  <div class="preview-lightbox-details">
+                    <h3 class="lightbox-title" id="previewLightboxTitle">Mascaras - HEALTH</h3>
+                    <dl class="lightbox-meta preview-lightbox-meta">
+                      <dt>Técnica</dt><dd id="previewTechnique">Acrílico</dd>
+                      <dt>Dimensiones</dt><dd id="previewDimensions">70 × 50 cm</dd>
+                      <dt>Año</dt><dd id="previewYear">2026</dd>
+                      <dt id="previewSeriesLabel">Serie</dt><dd id="previewSeries">Mascaras</dd>
+                      <dt id="previewLocationLabel">Ubicación</dt><dd id="previewLocation">-</dd>
+                    </dl>
+                    <p class="preview-lightbox-note" id="previewNote">Lo que llenas arriba se ve aquí de inmediato.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </details>
+
+      </section><!-- /admin-panel -->
+
+      <!-- BIBLIOTECA -->
+      <section class="admin-library">
+        <div class="library-head">
+          <div>
+            <h2 class="library-title">Mis obras guardadas</h2>
+            <p class="library-sub">Toca una obra para editarla o publicarla.</p>
+          </div>
+          <span class="library-count" id="libraryCount">0 piezas</span>
+        </div>
+        <div class="library-filters">
+          <label class="field">
+            <span>Buscar</span>
+            <input type="search" id="searchInput" placeholder="Título, técnica o serie…">
+          </label>
+          <label class="field">
+            <span>Filtrar por tipo</span>
+            <select id="libraryCategoryFilter">
+              <option value="all">Todas</option>
+              <option value="pinturas">Pinturas</option>
+              <option value="murales">Murales</option>
+              <option value="colaboraciones">Colaboraciones</option>
+              <option value="intervenciones">Intervenciones</option>
+            </select>
+          </label>
+        </div>
+        <div class="library-grid" id="artworkList" aria-live="polite"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <script src="../js/admin.js"></script>
+</body>
+</html>

@@ -62,7 +62,12 @@ export default {
 // AUTH
 // ───────────────────────────────────────────────────────────
 function requireAccessAuth(request) {
-  const jwt = request.headers.get('Cf-Access-Jwt-Assertion');
+  let jwt = request.headers.get('Cf-Access-Jwt-Assertion');
+  if (!jwt) {
+    const cookies = request.headers.get('Cookie') || '';
+    const match = cookies.match(/CF_Authorization=([^\s;]+)/);
+    if (match) jwt = match[1];
+  }
   if (!jwt) {
     return jsonResponse({ error: 'Unauthorized — Access JWT missing' }, 401);
   }

@@ -382,8 +382,17 @@
     try {
       if (refs.uploadDropzone) refs.uploadDropzone.classList.add('is-loading');
       if (refs.publishBtn) refs.publishBtn.disabled = true;
+
+      var processFile = file;
+      var isHeic = /\.(heic|heif)$/i.test(file.name) || file.type === 'image/heic' || file.type === 'image/heif';
+      if (isHeic && typeof heic2any !== 'undefined') {
+        setFeedback('Convirtiendo formato iPhone (HEIC)...', '');
+        var converted = await heic2any({ blob: file, toType: 'image/jpeg', quality: 0.92 });
+        processFile = new File([converted], file.name.replace(/\.\w+$/, '.jpg'), { type: 'image/jpeg' });
+      }
+
       setFeedback('Optimizando imagen...', '');
-      const optimized = await optimizeImage(file);
+      const optimized = await optimizeImage(processFile);
 
       currentImageAsset = optimized;
       refs.seedImageSelect.value = '';

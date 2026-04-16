@@ -63,10 +63,56 @@ document.addEventListener('DOMContentLoaded', function () {
   mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => toggleMenu(false)));
 
 
-  // ── 3. GALLERY FILTER ───────────────────────────────────────────
+  // ── 3. GALLERY — fetch from API + render + filter ────────────────
 
   const filterBtns = document.querySelectorAll('.filter-btn');
-  const obraCards  = document.querySelectorAll('.obra-card');
+  const galleryGrid = document.getElementById('galleryGrid');
+  let obraCards = [];
+
+  function buildCard(artwork, index) {
+    const statusMap = { available: 'avail', featured: 'feat', sold: 'sold' };
+    const badgeClass = 'badge-' + (statusMap[artwork.status] || 'avail');
+    const badgeLabel = { available: 'Disponible', featured: 'Destacada', sold: 'Vendida' }[artwork.status] || 'Disponible';
+    const badgeI18n = { available: 'badge.avail', featured: 'badge.feat', sold: 'badge.sold' }[artwork.status] || 'badge.avail';
+    const meta = [artwork.technique, artwork.dimensions, artwork.year].filter(Boolean).join(' · ');
+    const delay = index < 3 ? ' reveal-delay-' + index : '';
+    const dataAttrs = ' data-category="' + (artwork.category || '') + '"'
+      + ' data-title="' + escHtml(artwork.title || '') + '"'
+      + ' data-year="' + (artwork.year || '') + '"'
+      + ' data-dimensions="' + escHtml(artwork.dimensions || '') + '"'
+      + ' data-technique="' + escHtml(artwork.technique || '') + '"'
+      + ' data-series="' + escHtml(artwork.series || '') + '"'
+      + ' data-location="' + escHtml(artwork.location || '') + '"';
+
+    return '<article class="obra-card reveal' + delay + '"' + dataAttrs + '>'
+      + '<div class="obra-img"><div class="obra-img-inner">'
+      + '<img src="' + escHtml(artwork.image_url) + '" alt="' + escHtml(artwork.alt || artwork.title) + '" loading="lazy">'
+      + '</div></div>'
+      + '<div class="obra-info"><div>'
+      + '<div class="obra-title">' + escHtml(artwork.title) + '</div>'
+      + '<div class="obra-meta">' + escHtml(meta) + '</div>'
+      + '</div>'
+      + '<span class="badge ' + badgeClass + '" data-i18n="' + badgeI18n + '">' + badgeLabel + '</span>'
+      + '</div></article>';
+  }
+
+  function escHtml(s) {
+    return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  async function loadGallery() {
+    try {
+      const res = await fetch('/api/artworks/public');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const artworks = await res.json();
+      galleryGrid.innerHTML = artworks.map(buildCard).join('');
+      obraCards = document.querySelectorAll('#galleryGrid .obra-card');
+      // Init reveal observer on new cards
+      obraCards.forEach(el => revealObs.observe(el));
+    } catch (err) {
+      console.error('Error loading gallery:', err);
+    }
+  }
 
   filterBtns.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -80,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (match) {
           card.style.display = '';
-          // small delay so display:'' registers before opacity transition
           requestAnimationFrame(() => {
             requestAnimationFrame(() => {
               card.classList.remove('hiding');
@@ -197,7 +242,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ── 5. REVEAL ON SCROLL ─────────────────────────────────────────
 
-  const revealEls = document.querySelectorAll('.reveal');
   const revealObs = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -207,7 +251,11 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }, { threshold: 0.1 });
 
-  revealEls.forEach(el => revealObs.observe(el));
+  // Observe non-gallery reveal elements (hero, bio, etc.)
+  document.querySelectorAll('.reveal:not(.obra-card)').forEach(el => revealObs.observe(el));
+
+  // Load gallery from API (cards get observed inside loadGallery)
+  loadGallery();
 
 
   // ── 6. SMOOTH SCROLL (fallback for older browsers) ──────────────
@@ -225,7 +273,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // ── 7. LIGHTBOX ──────────────────────────────────────────────────
 
-  const gridEl   = document.getElementById('galleryGrid');
   const lightbox = document.getElementById('lightbox');
   let currentCardIndex = 0;
   let visibleCards = [];
@@ -308,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.body.style.overflow = '';
   }
 
-  gridEl.addEventListener('click', e => {
+  galleryGrid.addEventListener('click', e => {
     const card = e.target.closest('.obra-card');
     if (card) openLightbox(card);
   });

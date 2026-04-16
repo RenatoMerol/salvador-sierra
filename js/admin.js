@@ -1,5 +1,5 @@
 (function () {
-  const STORAGE_KEY = 'ss-admin-artworks-v1';
+  const API_BASE = '/api';
   const PLACEHOLDER_IMAGE = "data:image/svg+xml;charset=UTF-8," + encodeURIComponent(
     "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 1000'>" +
     "<rect width='800' height='1000' fill='#191919'/>" +
@@ -28,104 +28,6 @@
     hidden: { label: 'Oculta', pillClass: 'is-hidden' },
   };
 
-  const seedArtworks = [
-    {
-      id: 'mascaras-health',
-      title: 'Mascaras - HEALTH',
-      category: 'pinturas',
-      technique: 'Acrilico',
-      year: '2026',
-      dimensions: '70 x 50 cm',
-      series: 'Mascaras',
-      location: '',
-      status: 'featured',
-      visibility: 'published',
-      alt: 'Mascaras - HEALTH, Salvador Sierra',
-      note: 'Obra lista para publicarse y usarse como referencia de la serie.',
-      imageSrc: '../images/salvador-sierra-mascaras-health-70x50.webp',
-      imageKind: 'seed',
-      imageName: 'salvador-sierra-mascaras-health-70x50.webp',
-      imageInfo: 'Imagen de muestra del catalogo actual.',
-      updatedAt: '2026-03-29T19:47:44-06:00',
-    },
-    {
-      id: 'rostro-ulises',
-      title: 'El Rostro de Ulises',
-      category: 'pinturas',
-      technique: 'Tecnica mixta',
-      year: '2024',
-      dimensions: '140 x 100 cm',
-      series: '',
-      location: '',
-      status: 'available',
-      visibility: 'published',
-      alt: 'El Rostro de Ulises, Salvador Sierra',
-      note: 'Sirve para probar piezas hero o destacadas con formato vertical.',
-      imageSrc: '../images/salvador-sierra-el-rostro-de-ulises.webp',
-      imageKind: 'seed',
-      imageName: 'salvador-sierra-el-rostro-de-ulises.webp',
-      imageInfo: 'Imagen de muestra del catalogo actual.',
-      updatedAt: '2026-03-28T12:15:00-06:00',
-    },
-    {
-      id: 'amazon-cedis',
-      title: 'Amazon Mexico - CEDIS Tepotzotlan',
-      category: 'murales',
-      technique: 'Aerosol y acrilico',
-      year: '2021',
-      dimensions: 'Mural de sitio',
-      series: '',
-      location: 'Tepotzotlan, Edomex',
-      status: 'available',
-      visibility: 'published',
-      alt: 'Amazon Mexico - CEDIS Tepotzotlan, Salvador Sierra',
-      note: 'Ejemplo de mural con ubicacion visible en el detalle.',
-      imageSrc: '../images/salvador-sierra-mural-amazon-cedis-tepotzotlan.webp',
-      imageKind: 'seed',
-      imageName: 'salvador-sierra-mural-amazon-cedis-tepotzotlan.webp',
-      imageInfo: 'Imagen de muestra del catalogo actual.',
-      updatedAt: '2026-03-25T10:00:00-06:00',
-    },
-    {
-      id: 'error-digital',
-      title: 'Error Digital',
-      category: 'intervenciones',
-      technique: 'Tecnica mixta',
-      year: '2024',
-      dimensions: '120 x 90 cm',
-      series: '',
-      location: '',
-      status: 'available',
-      visibility: 'draft',
-      alt: 'Error Digital, Salvador Sierra',
-      note: 'Borrador de ejemplo para validar flujo de trabajo antes de publicar.',
-      imageSrc: '../images/salvador-sierra-tecnica-mixta-error-digital.webp',
-      imageKind: 'seed',
-      imageName: 'salvador-sierra-tecnica-mixta-error-digital.webp',
-      imageInfo: 'Imagen de muestra del catalogo actual.',
-      updatedAt: '2026-03-24T17:40:00-06:00',
-    },
-    {
-      id: 'tio-rico-archivo',
-      title: 'Tio Rico',
-      category: 'colaboraciones',
-      technique: 'Tecnica mixta',
-      year: '2022',
-      dimensions: '100 x 80 cm',
-      series: 'Pop Art',
-      location: '',
-      status: 'sold',
-      visibility: 'hidden',
-      alt: 'Tio Rico, Salvador Sierra',
-      note: 'Ejemplo de pieza archivada para ocultarla sin eliminarla.',
-      imageSrc: '../images/salvador-sierra-pop-art-tio-rico.webp',
-      imageKind: 'seed',
-      imageName: 'salvador-sierra-pop-art-tio-rico.webp',
-      imageInfo: 'Imagen de muestra del catalogo actual.',
-      updatedAt: '2026-03-20T09:30:00-06:00',
-    },
-  ];
-
   const refs = {};
   let artworks = [];
   let selectedArtworkId = null;
@@ -133,12 +35,13 @@
 
   document.addEventListener('DOMContentLoaded', init);
 
-  function init() {
+  async function init() {
     cacheRefs();
-    artworks = loadArtworks();
+    bindEvents();
+    setFeedback('Cargando obras del servidor...', '');
+    artworks = await loadArtworks();
     selectedArtworkId = artworks[0] ? artworks[0].id : null;
 
-    bindEvents();
     renderLibrary();
 
     if (selectedArtworkId) {
@@ -146,6 +49,7 @@
     } else {
       startNewArtwork();
     }
+    setFeedback('', '');
   }
 
   function cacheRefs() {
@@ -257,34 +161,22 @@
     }
   }
 
-  function loadArtworks() {
+  async function loadArtworks() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) return seedArtworks.map(cloneArtwork);
-
-      const parsed = JSON.parse(raw);
-      if (!Array.isArray(parsed) || parsed.length === 0) {
-        return seedArtworks.map(cloneArtwork);
-      }
-
-      return parsed.map(normalizeArtwork);
+      const res = await fetch(API_BASE + '/artworks');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const rows = await res.json();
+      return rows.map(normalizeArtwork);
     } catch (error) {
-      console.warn('No se pudo leer el almacenamiento local del admin.', error);
-      return seedArtworks.map(cloneArtwork);
+      console.error('Error al cargar obras del servidor:', error);
+      setFeedback('No se pudo conectar al servidor. Revisa tu conexion.', 'error');
+      return [];
     }
-  }
-
-  function persistArtworks() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(artworks));
-  }
-
-  function cloneArtwork(artwork) {
-    return normalizeArtwork(Object.assign({}, artwork));
   }
 
   function normalizeArtwork(artwork) {
     return {
-      id: artwork.id || generateId(artwork.title || 'obra'),
+      id: artwork.id || '',
       title: artwork.title || '',
       category: artwork.category || 'pinturas',
       technique: artwork.technique || '',
@@ -296,11 +188,9 @@
       visibility: visibilityConfig[artwork.visibility] ? artwork.visibility : 'draft',
       alt: artwork.alt || '',
       note: artwork.note || '',
-      imageSrc: artwork.imageSrc || '',
-      imageKind: artwork.imageKind || '',
-      imageName: artwork.imageName || '',
-      imageInfo: artwork.imageInfo || '',
-      updatedAt: artwork.updatedAt || new Date().toISOString(),
+      imageSrc: artwork.image_url || artwork.imageSrc || '',
+      imageKey: artwork.image_key || '',
+      updatedAt: artwork.updated_at || artwork.updatedAt || new Date().toISOString(),
     };
   }
 
@@ -318,9 +208,6 @@
       alt: '',
       note: '',
       imageSrc: '',
-      imageKind: '',
-      imageName: '',
-      imageInfo: '',
     });
   }
 
@@ -427,18 +314,15 @@
     refs.visibilityInput.value = artwork.visibility;
     refs.altInput.value = artwork.alt;
     refs.internalNoteInput.value = artwork.note;
-    refs.seedImageSelect.value = artwork.imageKind === 'seed' ? artwork.imageSrc : '';
+    refs.seedImageSelect.value = '';
     refs.imageInput.value = '';
 
     currentImageAsset = artwork.imageSrc ? {
       src: artwork.imageSrc,
-      name: artwork.imageName || artwork.title || 'imagen.webp',
-      info: artwork.imageInfo || '',
-      imageKind: artwork.imageKind || 'seed',
-      originalSize: 0,
-      optimizedSize: 0,
-      width: 0,
-      height: 0,
+      blob: null,
+      name: artwork.title || 'imagen.webp',
+      info: '',
+      imageKind: 'r2',
     } : null;
 
     updateUploadPresentation();
@@ -466,7 +350,7 @@
     if (file) handleUploadedFile(file);
   }
 
-  function handleSeedImageChange() {
+  async function handleSeedImageChange() {
     const selectedSrc = refs.seedImageSelect.value;
 
     if (!selectedSrc) {
@@ -476,16 +360,19 @@
       return;
     }
 
-    currentImageAsset = {
-      src: selectedSrc,
-      name: selectedSrc.split('/').pop(),
-      info: 'Imagen de muestra seleccionada para validar layout y composicion.',
-      imageKind: 'seed',
-      originalSize: 0,
-      optimizedSize: 0,
-      width: 0,
-      height: 0,
-    };
+    try {
+      const res = await fetch(selectedSrc);
+      const seedBlob = await res.blob();
+      currentImageAsset = {
+        src: selectedSrc,
+        blob: seedBlob,
+        name: selectedSrc.split('/').pop(),
+        info: 'Imagen de muestra.',
+        imageKind: 'seed',
+      };
+    } catch (err) {
+      currentImageAsset = { src: selectedSrc, blob: null, name: selectedSrc.split('/').pop(), info: '', imageKind: 'seed' };
+    }
 
     updateUploadPresentation();
     updatePreviewFromForm();
@@ -495,7 +382,7 @@
     try {
       if (refs.uploadDropzone) refs.uploadDropzone.classList.add('is-loading');
       if (refs.publishBtn) refs.publishBtn.disabled = true;
-      setFeedback('Optimizando imagen localmente para simular el flujo final...', '');
+      setFeedback('Optimizando imagen...', '');
       const optimized = await optimizeImage(file);
 
       currentImageAsset = optimized;
@@ -509,7 +396,7 @@
       updatePreviewFromForm();
       if (refs.uploadDropzone) refs.uploadDropzone.classList.remove('is-loading');
       if (refs.publishBtn) refs.publishBtn.disabled = false;
-      setFeedback('Imagen lista. El preview ahora usa la version optimizada en este navegador.', 'success');
+      setFeedback('Imagen lista. Se subira al guardar o publicar.', 'success');
     } catch (error) {
       console.error(error);
       if (refs.uploadDropzone) refs.uploadDropzone.classList.remove('is-loading');
@@ -577,7 +464,7 @@
   }
 
   function collectFormData() {
-    return normalizeArtwork({
+    return {
       id: refs.artworkId.value.trim(),
       title: refs.titleInput.value.trim(),
       category: refs.categoryInput.value,
@@ -591,14 +478,10 @@
       alt: refs.altInput.value.trim(),
       note: refs.internalNoteInput.value.trim(),
       imageSrc: currentImageAsset ? currentImageAsset.src : '',
-      imageKind: currentImageAsset ? currentImageAsset.imageKind : '',
-      imageName: currentImageAsset ? currentImageAsset.name : '',
-      imageInfo: currentImageAsset ? currentImageAsset.info : '',
-      updatedAt: new Date().toISOString(),
-    });
+    };
   }
 
-  function saveArtwork(mode) {
+  async function saveArtwork(mode) {
     const artwork = collectFormData();
     const validationError = validateArtwork(artwork, mode);
 
@@ -613,43 +496,98 @@
       artwork.visibility = 'published';
     }
 
-    artwork.updatedAt = new Date().toISOString();
-    artwork.id = artwork.id || generateId(artwork.title || 'obra');
-
-    const existingIndex = artworks.findIndex(function (item) { return item.id === artwork.id; });
-
-    if (existingIndex >= 0) {
-      artworks[existingIndex] = artwork;
-    } else {
-      artworks.unshift(artwork);
-    }
-
-    selectedArtworkId = artwork.id;
-    refs.artworkId.value = artwork.id;
+    if (refs.publishBtn) refs.publishBtn.disabled = true;
+    if (refs.saveDraftBtn) refs.saveDraftBtn.disabled = true;
+    setFeedback('Guardando en el servidor...', '');
 
     try {
-      persistArtworks();
+      const isUpdate = Boolean(artwork.id) && artworks.some(function (a) { return a.id === artwork.id; });
+      const form = new FormData();
+      form.append('title', artwork.title);
+      form.append('category', artwork.category);
+      form.append('technique', artwork.technique);
+      form.append('year', artwork.year);
+      form.append('dimensions', artwork.dimensions);
+      form.append('series', artwork.series);
+      form.append('location', artwork.location);
+      form.append('status', artwork.status);
+      form.append('visibility', artwork.visibility);
+      form.append('alt', artwork.alt);
+      form.append('note', artwork.note);
+
+      if (currentImageAsset && currentImageAsset.blob) {
+        form.append('image', currentImageAsset.blob, currentImageAsset.name || 'imagen.webp');
+      }
+
+      let res;
+      if (isUpdate) {
+        if (currentImageAsset && currentImageAsset.blob) {
+          res = await fetch(API_BASE + '/artworks/' + artwork.id, { method: 'PATCH', body: form });
+        } else {
+          res = await fetch(API_BASE + '/artworks/' + artwork.id, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: artwork.title, category: artwork.category, technique: artwork.technique,
+              year: artwork.year, dimensions: artwork.dimensions, series: artwork.series,
+              location: artwork.location, status: artwork.status, visibility: artwork.visibility,
+              alt: artwork.alt, note: artwork.note,
+            }),
+          });
+        }
+      } else {
+        if (!currentImageAsset || !currentImageAsset.blob) {
+          setFeedback('Para crear una obra nueva necesitas subir una imagen.', 'error');
+          if (refs.publishBtn) refs.publishBtn.disabled = false;
+          if (refs.saveDraftBtn) refs.saveDraftBtn.disabled = false;
+          return;
+        }
+        res = await fetch(API_BASE + '/artworks', { method: 'POST', body: form });
+      }
+
+      if (!res.ok) {
+        const err = await res.json().catch(function () { return { error: 'Error desconocido' }; });
+        throw new Error(err.error || 'HTTP ' + res.status);
+      }
+
+      const saved = await res.json();
+      const normalized = normalizeArtwork(saved);
+      const existingIndex = artworks.findIndex(function (a) { return a.id === normalized.id; });
+      if (existingIndex >= 0) {
+        artworks[existingIndex] = normalized;
+      } else {
+        artworks.unshift(normalized);
+      }
+
+      selectedArtworkId = normalized.id;
+      refs.artworkId.value = normalized.id;
+      currentImageAsset = normalized.imageSrc ? { src: normalized.imageSrc, name: '', info: '', blob: null } : null;
+
       renderLibrary();
-      refs.formHeading.textContent = artwork.title || 'Editar obra';
+      populateForm(normalized);
+      refs.formHeading.textContent = normalized.title || 'Editar obra';
       refs.deleteArtworkBtn.disabled = false;
 
-      if (artwork.visibility === 'published') {
+      if (normalized.visibility === 'published') {
         if (refs.successScreen) {
           if (refs.successSubtitle) {
-            refs.successSubtitle.textContent = '"' + artwork.title + '" ya está visible en tu sitio.';
+            refs.successSubtitle.textContent = '"' + normalized.title + '" ya esta visible en tu sitio.';
           }
           refs.successScreen.classList.add('is-visible');
         } else {
-          setFeedback('Obra guardada como publicada en este prototipo local.', 'success');
+          setFeedback('Obra publicada en el sitio.', 'success');
         }
-      } else if (artwork.visibility === 'hidden') {
-        setFeedback('Obra guardada como oculta. Sigue disponible en el panel, pero no saldria al sitio.', 'success');
+      } else if (normalized.visibility === 'hidden') {
+        setFeedback('Obra guardada como oculta. Sigue disponible en el panel, pero no aparece en el sitio.', 'success');
       } else {
-        setFeedback('Obra guardada como borrador para seguir afinando el contenido.', 'success');
+        setFeedback('Borrador guardado en el servidor.', 'success');
       }
     } catch (error) {
       console.error(error);
-      setFeedback('No pude guardar en localStorage. Puede que el navegador ya este lleno para esta demo.', 'error');
+      setFeedback('Error al guardar: ' + error.message, 'error');
+    } finally {
+      if (refs.publishBtn) refs.publishBtn.disabled = false;
+      if (refs.saveDraftBtn) refs.saveDraftBtn.disabled = false;
     }
   }
 
@@ -666,41 +604,41 @@
     return '';
   }
 
-  function deleteArtwork() {
+  async function deleteArtwork() {
     if (!selectedArtworkId) return;
 
     const artwork = artworks.find(function (item) { return item.id === selectedArtworkId; });
     if (!artwork) return;
 
-    const shouldDelete = window.confirm('Eliminar "' + artwork.title + '" del prototipo local?');
+    const shouldDelete = window.confirm('Eliminar "' + artwork.title + '" permanentemente del sitio?');
     if (!shouldDelete) return;
 
-    artworks = artworks.filter(function (item) { return item.id !== selectedArtworkId; });
-
+    setFeedback('Eliminando del servidor...', '');
     try {
-      persistArtworks();
-    } catch (error) {
-      console.error(error);
-    }
+      const res = await fetch(API_BASE + '/artworks/' + selectedArtworkId, { method: 'DELETE' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+
+      artworks = artworks.filter(function (item) { return item.id !== selectedArtworkId; });
 
       if (artworks[0]) {
         selectedArtworkId = artworks[0].id;
-      renderLibrary();
-      selectArtwork(selectedArtworkId);
-    } else {
-      renderLibrary();
-      startNewArtwork();
-    }
+        renderLibrary();
+        selectArtwork(selectedArtworkId);
+      } else {
+        renderLibrary();
+        startNewArtwork();
+      }
 
-    setFeedback('La obra se elimino del prototipo local.', 'success');
+      setFeedback('Obra eliminada del sitio.', 'success');
+    } catch (error) {
+      console.error(error);
+      setFeedback('Error al eliminar: ' + error.message, 'error');
+    }
   }
 
-  function resetPrototype() {
-    const shouldReset = window.confirm('Esto restaurara la demo local del panel. Los cambios actuales del prototipo se perderan.');
-    if (!shouldReset) return;
-
-    localStorage.removeItem(STORAGE_KEY);
-    artworks = seedArtworks.map(cloneArtwork);
+  async function resetPrototype() {
+    setFeedback('Recargando obras del servidor...', '');
+    artworks = await loadArtworks();
     selectedArtworkId = artworks[0] ? artworks[0].id : null;
     renderLibrary();
 
@@ -710,7 +648,7 @@
       startNewArtwork();
     }
 
-    setFeedback('La demo local se restauro a su estado inicial.', 'success');
+    setFeedback('Lista actualizada desde el servidor.', 'success');
   }
 
   async function optimizeImage(file) {
@@ -737,10 +675,15 @@
     const originalSize = file.size;
     const optimizedSize = getDataUrlSize(optimizedDataUrl);
 
+    const blob = await new Promise(function (resolve) {
+      canvas.toBlob(function (b) { resolve(b); }, extension === '.webp' ? 'image/webp' : 'image/jpeg', 0.86);
+    });
+
     return {
       src: optimizedDataUrl,
+      blob: blob,
       name: file.name.replace(/\.[^.]+$/, extension),
-      info: 'Optimizada en navegador: ' + size.width + ' x ' + size.height + ' px - ' + formatBytes(originalSize) + ' a ' + formatBytes(optimizedSize) + '.',
+      info: 'Optimizada: ' + size.width + ' x ' + size.height + ' px - ' + formatBytes(originalSize) + ' a ' + formatBytes(optimizedSize) + '.',
       imageKind: 'upload',
       originalSize: originalSize,
       optimizedSize: optimizedSize,

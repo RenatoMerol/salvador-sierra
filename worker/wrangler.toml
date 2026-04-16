@@ -1,0 +1,26 @@
+name = "salvador-sierra-api"
+main = "index.js"
+compatibility_date = "2026-04-01"
+account_id = "623a1cccb9e2aa815ec2718780919ae0"
+
+# Ruta: el Worker intercepta todo /api/* en salvadorsierra.com.mx
+# Se cablea en deploy — el Zone ID se toma del dominio raíz
+routes = [
+  { pattern = "salvadorsierra.com.mx/api/*", zone_name = "salvadorsierra.com.mx" }
+]
+
+# Binding D1
+[[d1_databases]]
+binding = "DB"
+database_name = "salvador-sierra-db"
+database_id = "0fbc64cd-7f14-4fe7-877f-6399efa9d0ec"
+
+# Binding R2
+[[r2_buckets]]
+binding = "IMAGES"
+bucket_name = "salvador-sierra-images"
+
+# Variables públicas (no secretas)
+[vars]
+R2_PUBLIC_URL = "https://pub-dc75536b2ad048bdb0bbcec10e7e9445.r2.dev"
+ALLOWED_ORIGIN = "https://salvadorsierra.com.mx"

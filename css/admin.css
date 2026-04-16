@@ -438,6 +438,17 @@
 .library-grid { padding: 1.1rem 1.5rem; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.65rem; }
 
 /* Library items (HTML generado por JS) */
+.library-item-wrap { position: relative; }
+.library-delete-btn {
+  position: absolute; top: 0.35rem; right: 0.35rem; z-index: 2;
+  width: 1.5rem; height: 1.5rem; border-radius: 50%;
+  background: rgba(0,0,0,0.7); color: #ff6b6b; border: 1px solid rgba(255,107,107,0.3);
+  font-size: 0.7rem; line-height: 1; cursor: pointer;
+  opacity: 0; transition: opacity var(--t-fast), background var(--t-fast);
+  display: flex; align-items: center; justify-content: center;
+}
+.library-item-wrap:hover .library-delete-btn { opacity: 1; }
+.library-delete-btn:hover { background: rgba(214,48,49,0.9); color: #fff; }
 .library-item { width: 100%; border: 1px solid var(--border); background: var(--bg); color: var(--text); padding: 0; display: flex; flex-direction: column; text-align: left; cursor: pointer; overflow: hidden; transition: border-color var(--t-fast), transform var(--t-fast); }
 .library-item:hover { border-color: var(--border-2); transform: translateY(-2px); }
 .library-item.is-active { border-color: var(--red); box-shadow: 0 0 0 1px rgba(214,48,49,0.15); }

@@ -253,6 +253,7 @@
       const cardMeta = buildCardMeta(artwork);
 
       return [
+        '<div class="library-item-wrap">',
         '<button type="button" class="library-item' + (artwork.id === selectedArtworkId ? ' is-active' : '') + '" data-artwork-id="' + escapeHtml(artwork.id) + '">',
         '  <div class="library-thumb"><img src="' + escapeHtml(imageSrc) + '" alt="' + escapeHtml(artwork.alt || artwork.title || 'Obra sin titulo') + '"></div>',
         '  <div class="library-info">',
@@ -264,15 +265,53 @@
         '    </div>',
         '  </div>',
         '</button>',
+        '<button type="button" class="library-delete-btn" data-delete-id="' + escapeHtml(artwork.id) + '" data-delete-title="' + escapeHtml(artwork.title) + '" title="Eliminar obra">✕</button>',
+        '</div>',
       ].join('');
     }).join('');
   }
 
   function handleLibraryClick(event) {
+    var deleteBtn = event.target.closest('[data-delete-id]');
+    if (deleteBtn) {
+      event.stopPropagation();
+      deleteArtworkById(deleteBtn.dataset.deleteId, deleteBtn.dataset.deleteTitle);
+      return;
+    }
+
     const trigger = event.target.closest('[data-artwork-id]');
     if (!trigger) return;
 
     selectArtwork(trigger.dataset.artworkId);
+  }
+
+  async function deleteArtworkById(id, title) {
+    if (!id) return;
+    var shouldDelete = window.confirm('Eliminar "' + (title || 'esta obra') + '" permanentemente del sitio?');
+    if (!shouldDelete) return;
+
+    setFeedback('Eliminando del servidor...', '');
+    try {
+      var res = await fetch(API_BASE + '/artworks/' + id, { method: 'DELETE' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+
+      artworks = artworks.filter(function (item) { return item.id !== id; });
+
+      if (selectedArtworkId === id) {
+        if (artworks[0]) {
+          selectedArtworkId = artworks[0].id;
+          selectArtwork(selectedArtworkId);
+        } else {
+          startNewArtwork();
+        }
+      }
+
+      renderLibrary();
+      setFeedback('Obra eliminada del sitio.', 'success');
+    } catch (error) {
+      console.error(error);
+      setFeedback('Error al eliminar: ' + error.message, 'error');
+    }
   }
 
   function selectArtwork(artworkId) {

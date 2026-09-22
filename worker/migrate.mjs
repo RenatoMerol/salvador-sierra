@@ -19,7 +19,7 @@ const HTML_PATH = join(ROOT, 'index.html');
 const IMAGES_DIR = join(ROOT, 'images');
 const BUCKET = 'salvador-sierra-images';
 const DB = 'salvador-sierra-db';
-const R2_PUBLIC = 'https://pub-dc75536b2ad048bdb0bbcec10e7e9445.r2.dev';
+const R2_PUBLIC = 'https://img.salvadorsierra.studio';
 
 // ──────────────────────────────────────────
 // Parse HTML con regex (suficiente para HTML predecible)

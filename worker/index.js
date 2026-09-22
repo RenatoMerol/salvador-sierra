@@ -6,8 +6,11 @@
 //   PATCH  /api/artworks/:id           — admin, update parcial (JSON)
 //   DELETE /api/artworks/:id           — admin, borra D1 + R2
 //
-// Auth: Cloudflare Access intercepta antes, inyecta Cf-Access-Jwt-Assertion.
-// El Worker confía en la presencia del JWT (Access ya validó la firma y el email).
+// Auth: Cloudflare Access protege /admin/* y deja la cookie CF_Authorization.
+// La API no pasa por Access, así que el Worker verifica la firma del JWT
+// (ver access-auth.js). Sin ACCESS_TEAM_DOMAIN + ACCESS_AUD, todo lo privado da 401.
+
+import { verifyAccessJwt } from './access-auth.js';
 
 const ALLOWED_CATEGORIES = ['pinturas', 'murales', 'colaboraciones', 'intervenciones'];
 const ALLOWED_STATUS = ['available', 'featured', 'sold'];
@@ -31,7 +34,7 @@ export default {
       }
 
       // Todo lo demás requiere auth de Cloudflare Access
-      const auth = requireAccessAuth(request);
+      const auth = await requireAccessAuth(request, env);
       if (auth instanceof Response) return withCors(auth, env);
 
       if (pathname === '/api/artworks' && method === 'GET') {
@@ -61,7 +64,7 @@ export default {
 // ───────────────────────────────────────────────────────────
 // AUTH
 // ───────────────────────────────────────────────────────────
-function requireAccessAuth(request) {
+async function requireAccessAuth(request, env) {
   let jwt = request.headers.get('Cf-Access-Jwt-Assertion');
   if (!jwt) {
     const cookies = request.headers.get('Cookie') || '';
@@ -72,12 +75,13 @@ function requireAccessAuth(request) {
     return jsonResponse({ error: 'Unauthorized — Access JWT missing' }, 401);
   }
   try {
-    const parts = jwt.split('.');
-    if (parts.length !== 3) throw new Error('Malformed JWT');
-    const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
-    if (!payload.email) throw new Error('No email in JWT');
+    const payload = await verifyAccessJwt(jwt, {
+      teamDomain: env.ACCESS_TEAM_DOMAIN,
+      aud: env.ACCESS_AUD,
+    });
     return { email: payload.email };
-  } catch {
+  } catch (err) {
+    console.warn('Access JWT rejected:', err.message);
     return jsonResponse({ error: 'Unauthorized — invalid JWT' }, 401);
   }
 }

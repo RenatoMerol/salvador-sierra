@@ -2,7 +2,7 @@
 
 Sitio web oficial del pintor y artista visual Salvador Sierra.
 
-**Live:** https://salvadorsierra.com.mx
+**Live:** https://salvadorsierra.studio
 
 ## Estructura
 

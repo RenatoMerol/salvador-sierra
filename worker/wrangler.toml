@@ -24,7 +24,7 @@ bucket_name = "salvador-sierra-images"
 
 # Variables públicas (no secretas)
 [vars]
-R2_PUBLIC_URL = "https://pub-dc75536b2ad048bdb0bbcec10e7e9445.r2.dev"
+R2_PUBLIC_URL = "https://img.salvadorsierra.studio"
 ALLOWED_ORIGIN = "https://salvadorsierra.studio"
 # Cloudflare Access (Zero Trust) — el Worker verifica el JWT contra este team.
 # ACCESS_AUD = "Application Audience (AUD) Tag" de la app de Access que protege /admin/*.

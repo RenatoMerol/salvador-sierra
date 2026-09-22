@@ -30,4 +30,4 @@ ALLOWED_ORIGIN = "https://salvadorsierra.studio"
 # ACCESS_AUD = "Application Audience (AUD) Tag" de la app de Access que protege /admin/*.
 # Si falta alguno, los endpoints privados responden 401 (falla cerrado).
 ACCESS_TEAM_DOMAIN = "merolmedia.cloudflareaccess.com"
-ACCESS_AUD = ""
+ACCESS_AUD = "d3152967117b3e2b37f48b5c22e0a0d19da87dc9ca2c7b0ef727ab5b86f6581b"
